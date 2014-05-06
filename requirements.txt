@@ -1,0 +1,2 @@
+ipython[notebook]>=2.0.0
+pygit2>=0.20.3
