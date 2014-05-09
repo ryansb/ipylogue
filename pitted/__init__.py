@@ -29,3 +29,5 @@ __ref__ = 0x000000
 __author__ = 'Ryan Brown'
 __license__ = 'AGPLv3'
 __copyright__ = 'Copyright 2014 Ryan Brown'
+
+from .gitmanager import GitNotebookManager
