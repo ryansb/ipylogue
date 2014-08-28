@@ -7,3 +7,5 @@ ipython notebooks.
 # Licensing
 
 GPLv3, see COPYING.txt for full license
+
+Also see https://github.com/FriendCode/gittle for dulwich usage examples
