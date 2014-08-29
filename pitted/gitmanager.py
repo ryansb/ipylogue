@@ -19,11 +19,11 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
-from dulwich.repo import Repo
+import dulwich.porcelain as git
 from dulwich.errors import NotGitRepository
 
-from IPython.utils.traitlets import Unicode
-from IPython.html.services.notebooks.nbmanager import NotebookManager
+from IPython.utils.traitlets import Bool, Unicode
+from IPython.html.services.notebooks.filenbmanager import FileNotebookManager
 
 import os
 from os import getcwd

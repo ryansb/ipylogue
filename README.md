@@ -12,11 +12,12 @@ ipython notebooks.
 Add this to your ipython notebook profile (`ipython_notebook_config.py`):
 
 ```
+# c.NotebookApp.notebook_manager_class = 'IPython.html.services.notebooks.filenbmanager.FileNotebookManager'
 c.NotebookApp.notebook_manager_class = 'pitted.gitmanager.GitNotebookManager'
-c.GitNotebookManager.commiter_name = COMMITTER_NAME
-c.GitNotebookManager.commiter_email = COMMITTER_EMAIL
+c.GitNotebookManager.commiter_name = u'COMMITTER_NAME'
+c.GitNotebookManager.commiter_email = u'COMMITTER_EMAIL'
 c.GitNotebookManager.git_repo = u'/home/yourname/code/fancydatathings'
-c.GitNotebookManager.repo_subdir = u'notebooks' # OPTIONAL: relative path *inside* the repo where you want notebooks
+c.GitNotebookManager.repo_subdir = u'notebooks' # OPTIONAL: a directory *inside* the repo where you want notebooks to put notebooks
 ```
 
 It's easy to set up a notebook profile if you don't have one:
