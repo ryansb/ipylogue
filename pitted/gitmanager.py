@@ -18,30 +18,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-"""A notebook manager that uses local git
-
-Requires IPython 1.0.0+
-
-Add this to your ipython notebook profile (`ipython_notebook_config.py`):
-
-    c.NotebookApp.notebook_manager_class = 'pitted.gitmanager.GitNotebookManager'
-    c.GitNotebookManager.commiter_name = COMMITTER_NAME
-    c.GitNotebookManager.commiter_email = COMMITTER_EMAIL
-    c.GitNotebookManager.git_repo = u'/home/yourname/code/fancydatathings'
-    c.GitNotebookManager.repo_subdir = u'notebooks' # OPTIONAL: relative path *inside* the repo where you want notebooks
-
-It's easy to set up a notebook profile if you don't have one:
-
-    $ ipython profile create pitted
-    [ProfileCreate] Generating default config file: u'/home/yourname/.ipython/profile_pitted/ipython_config.py'
-    [ProfileCreate] Generating default config file: u'/home/yourname/.ipython/profile_pitted/ipython_notebook_config.py'
-    [ProfileCreate] Generating default config file: u'/home/yourname/.ipython/profile_pitted/ipython_nbconvert_config.py'
-
-You can also use your default config, located at
-
-~/.ipython/profile_default/ipython_notebook_config.py
-
-"""
 
 from dulwich.repo import Repo
 from dulwich.errors import NotGitRepository
