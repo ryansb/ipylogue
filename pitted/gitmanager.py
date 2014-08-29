@@ -33,115 +33,132 @@ class PittedConfigurationException(Exception):
     pass
 
 
-class GitNotebookManager(NotebookManager):
+class GitNotebookManager(FileNotebookManager):
     """Git-backed storage of ipython notebooks.
     """
+    save_script = Bool(
+        False, config=True,
+        help="""Automatically create a Python script when saving the notebook.
 
+        For easier use of import, %run and %load across notebooks, a
+        <notebook-name>.py script will be created next to any
+        <notebook-name>.ipynb on each save.  This can also be set with the
+        short `--script` flag.
+        """
+    )
     notebook_dir = Unicode(getcwd(), config=True)
-    repo_dir = Unicode('', config=True)
+    committer_name = Unicode("Mr. Anonymous", config=True)
+    committer_email = Unicode("anon@ymo.us", config=True)
+
+    @property
+    def committer_fullname(self):
+        c = "{} <{}>".format(self.committer_name, self.committer_email)
+        self.log.debug("Committing as " + c)
+        return c
 
     _repo = None
 
     def __init__(self, **kwargs):
         super(GitNotebookManager, self).__init__(**kwargs)
-
-        if self.repo_dir == '':
-            self.repo_dir = self.notebook_dir
-        elif not self.notebook_dir.startswith(self.repo_dir):
-            raise PittedConfigurationException(
-                "notebook_dir needs to be either the same directory or "
-                "a subdirectory of repo_dir. {repo} does not contain {nb}"
-                "".format(repo=self.repo_dir, nb=self.notebook_dir))
+        self._check_repo()
 
     def _check_repo(self):
         if self._repo is not None:
             return
         try:
-            self._repo = Repo(self.repo_dir)
+            self._repo = git.Repo(self.notebook_dir)
         except NotGitRepository:
-            self._repo = Repo.init(self.repo_dir)
-            self.log.info("hey there", self._repo.refs['refs/heads/master'])
+            git.Repo.init(self.notebook_dir)
+            self._repo = git.Repo(self.notebook_dir)
+
+    def _notebook_dir_changed(self, name, old, new):
+        return super(GitNotebookManager, self)._notebook_dir_changed(name, old,
+                                                                     new)
+
+    def _copy(self, src, dest):
+        return super(GitNotebookManager, self)._copy(src, dest)
+
+    def get_notebook_names(self, path=''):
+        return super(GitNotebookManager, self).get_notebook_names(path)
 
     def path_exists(self, path):
-        """Does the API-style path (directory) actually exist?
-
-        Override this method in subclasses.
-
-        Parameters
-        ----------
-        path : string
-            The path to check
-
-        Returns
-        -------
-        exists : bool
-            Whether the path does indeed exist.
-        """
-        self._check_repo()
-        if path == "":
-            return True
-        p = os.path.join('../' + path)  # dulwich thinks of ".git" as its cwd.
-        self.log.info("Checking for item %s" % p)
-        f = self._repo.get_named_file(p)
-        if f is None:
-            return False
-        f.close()
-        return True
-
-    def list_dirs(self, path):
-        self._check_repo()
-        """List the directory models for a given API style path."""
-        idx = list(self._repo.open_index())
-        self.log.info("Listing dirs: %s", idx)
-        # TODO: return only items in the notebook_dir of the repo
-        return idx
-
-    def list_notebooks(self, path=''):
-        """Return a list of notebook dicts without content.
-
-        This returns a list of dicts, each of the form::
-
-            dict(notebook_id=notebook,name=name)
-
-        This list of dicts should be sorted by name::
-
-            data = sorted(data, key=lambda item: item['name'])
-        """
-
-        nb = filter(str.endswith(self.filename_ext), self.list_dirs(path))
-        raise NotImplementedError('must be implemented in a subclass')
-
-    def notebook_exists(self, name, path=''):
-        """Returns a True if the notebook exists. Else, returns False.
-
-        Parameters
-        ----------
-        name : string
-            The name of the notebook you are checking.
-        path : string
-            The relative path to the notebook (with '/' as separator)
-
-        Returns
-        -------
-        bool
-        """
-        self.log.info("notebook_exists looking for %s", name +
-                      self.filename_ext)
-        return name + self.filename_ext in self.list_dirs(path)
+        return super(GitNotebookManager, self).path_exists(path)
 
     def is_hidden(self, path):
-        """Does the API style path correspond to a hidden directory or file?
+        return super(GitNotebookManager, self).is_hidden(path)
 
-        Parameters
-        ----------
-        path : string
-            The path to check. This is an API path (`/` separated,
-            relative to base notebook-dir).
+    def notebook_exists(self, name, path=''):
+        return super(GitNotebookManager, self).notebook_exists(name, path)
 
-        Returns
-        -------
-        exists : bool
-            Whether the path is hidden.
+    def list_dirs(self, path):
+        return super(GitNotebookManager, self).list_dirs(path)
 
-        """
-        return False  # We don't support hidden files.
+    def get_dir_model(self, name, path=''):
+        return super(GitNotebookManager, self).get_dir_model(name, path)
+
+    def list_notebooks(self, path):
+        return super(GitNotebookManager, self).list_notebooks(path)
+
+    def get_notebook(self, name, path='', content=True):
+        return super(GitNotebookManager, self).get_notebook(name, path,
+                                                            content)
+
+    def save_notebook(self, model, name='', path=''):
+        self._check_repo()
+
+        model = super(GitNotebookManager, self).save_notebook(
+            model, name, path)
+
+        os_path = super(GitNotebookManager, self)._get_os_path(
+            model['name'], model['path'])
+        local_path = os_path[len(self.notebook_dir):].strip('/')
+
+        git.add(self._repo, str(local_path))  # path must not be unicode. :(
+
+        if self.save_script:
+            git.add(self._repo, str(os.path.splitext(local_path)[0] + '.py'))
+
+        self.log.debug("Notebook added %s" % local_path)
+        git.commit(self._repo, "IPython Save",
+                   committer=self.committer_fullname)
+        return model
+
+    def update_notebook(self, model, name, path=''):
+        return super(GitNotebookManager, self
+                     ).update_notebook(model, name, path)
+
+    def delete_notebook(self, name, path=''):
+        return super(GitNotebookManager, self).delete_notebook(name, path)
+
+    def rename_notebook(self, old_name, old_path, new_name, new_path):
+        return super(GitNotebookManager, self
+                     ).rename_notebook(old_name, old_path, new_name, new_path)
+
+    # Checkpoint-related utilities
+
+    def get_checkpoint_path(self, checkpoint_id, name, path=''):
+        return super(GitNotebookManager, self
+                     ).get_checkpoint_path(checkpoint_id, name, path)
+
+    def get_checkpoint_model(self, checkpoint_id, name, path=''):
+        return super(GitNotebookManager, self
+                     ).get_checkpoint_model(checkpoint_id, name, path)
+
+    # public checkpoint API
+
+    def create_checkpoint(self, name, path=''):
+        return super(GitNotebookManager, self).create_checkpoint(name, path)
+
+    def list_checkpoints(self, name, path=''):
+        return super(GitNotebookManager, self).list_checkpoints(name, path)
+
+    def restore_checkpoint(self, checkpoint_id, name, path=''):
+        return super(GitNotebookManager,
+                     self).restore_checkpoint(checkpoint_id, name, path)
+
+    def delete_checkpoint(self, checkpoint_id, name, path=''):
+        return super(GitNotebookManager, self).delete_checkpoint(checkpoint_id,
+                                                                 name, path)
+
+    def info_string(self):
+        return "Serving notebooks from local git repository: %s" % self.notebook_dir
