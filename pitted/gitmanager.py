@@ -34,8 +34,13 @@ class PittedConfigurationException(Exception):
 class GitNotebookManager(FileNotebookManager):
     """Git-backed storage of ipython notebooks.
     """
-    committer_name = Unicode("Mr. Anonymous", config=True)
-    committer_email = Unicode("anon@ymo.us", config=True)
+    committer_name = Unicode('', config=True,
+                             help="The name of the committer (probably your "
+                             "name). Pulls from ~/.gitconfig if blank.")
+    committer_email = Unicode('', config=True,
+                              help="The email address the commits should come "
+                              "from (probably yours). Pulls from ~/.gitconfig "
+                              "if blank.")
 
     @property
     def committer_fullname(self):
@@ -48,6 +53,10 @@ class GitNotebookManager(FileNotebookManager):
     def __init__(self, **kwargs):
         super(GitNotebookManager, self).__init__(**kwargs)
         self._check_repo()
+        if not self.committer_email:
+            self.committer_email = self._repo.get_config_stack().get('user', 'email')
+        if not self.committer_name:
+            self.committer_name = self._repo.get_config_stack().get('user', 'name')
 
     def _check_repo(self):
         if self._repo is not None:
