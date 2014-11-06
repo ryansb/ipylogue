@@ -43,7 +43,7 @@ c = get_config()
 
 # The notebook manager class to use.
 # c.NotebookApp.notebook_manager_class = 'IPython.html.services.notebooks.filenbmanager.FileNotebookManager'
-c.NotebookApp.notebook_manager_class = 'pitted.gitmanager.GitNotebookManager'
+c.NotebookApp.notebook_manager_class = 'ipylogue.gitmanager.GitNotebookManager'
 c.GitNotebookManager.save_script = True
 c.GitNotebookManager.commiter_name = u'Sam Snake'
 c.GitNotebookManager.commiter_email = u'hiss@python.snakes'
@@ -93,7 +93,7 @@ c.GitNotebookManager.commiter_email = u'hiss@python.snakes'
 # c.NotebookApp.base_url = '/'
 
 # The directory to use for notebooks and kernels.
-# c.NotebookApp.notebook_dir = u'/home/ryansb/code/pitted'
+# c.NotebookApp.notebook_dir = u'/home/you/code/ipylogue'
 
 #
 # c.NotebookApp.file_to_run = ''
@@ -521,7 +521,7 @@ c.GitNotebookManager.commiter_email = u'hiss@python.snakes'
 #     to the contents of the file.
 
 # Username for the Session. Default is your system username.
-# c.Session.username = u'ryansb'
+# c.Session.username = u'you'
 
 # The name of the unpacker for unserializing messages. Only used with custom
 # functions for `packer`.
@@ -611,7 +611,7 @@ c.GitNotebookManager.commiter_email = u'hiss@python.snakes'
 # MappingKernelManager will inherit config from: MultiKernelManager
 
 #
-# c.MappingKernelManager.root_dir = u'/home/ryansb/code/pitted'
+# c.MappingKernelManager.root_dir = u'/home/you/code/ipylogue'
 
 # The kernel manager class.  This is configurable to allow subclassing of the
 # KernelManager for customized behavior.
@@ -648,7 +648,7 @@ c.GitNotebookManager.commiter_email = u'hiss@python.snakes'
 # c.FileNotebookManager.save_script = False
 
 #
-# c.FileNotebookManager.notebook_dir = u'/home/ryansb/code/pitted'
+# c.FileNotebookManager.notebook_dir = u'/home/you/code/ipylogue'
 
 #------------------------------------------------------------------------------
 # NotebookNotary configuration

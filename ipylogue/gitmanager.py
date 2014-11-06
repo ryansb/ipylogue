@@ -3,9 +3,9 @@
 #
 # Copyright (c) 2014 Ryan Brown <sb@ryansb.com>
 #
-# This file is part of pitted.
+# This file is part of ipylogue.
 #
-# pitted is free software: you can redistribute it and/or modify
+# ipylogue is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
@@ -25,10 +25,6 @@ from IPython.utils.traitlets import Unicode
 from IPython.html.services.notebooks.filenbmanager import FileNotebookManager
 
 import os
-
-
-class PittedConfigurationException(Exception):
-    pass
 
 
 class GitNotebookManager(FileNotebookManager):
@@ -84,7 +80,7 @@ class GitNotebookManager(FileNotebookManager):
 
         self.log.debug("Notebook added %s" % local_path)
         git.commit(self._repo, "IPython notebook save\n\n"
-                   "Automated commit from IPython via pitted",
+                   "Automated commit from IPython via ipylogue",
                    committer=self.committer_fullname)
         return model
 
@@ -115,7 +111,7 @@ class GitNotebookManager(FileNotebookManager):
         self.log.debug("Notebook renamed from '%s' to '%s'" % (old_files[0],
                                                                new_files[0]))
         git.commit(self._repo, "IPython notebook rename\n\n"
-                   "Automated commit from IPython via pitted",
+                   "Automated commit from IPython via ipylogue",
                    committer=self.committer_fullname)
         return renamed
 

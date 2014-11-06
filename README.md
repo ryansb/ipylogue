@@ -1,7 +1,7 @@
-# pitted - IPython notebook storage backed by git
+# ipylogue - IPython notebook storage backed by git
 
 Like tracking checkpoints in your ipython notebooks? Perhaps you'd like better
-control over their revisions. Then pitted is for you. Heavy duty VCS for your
+control over their revisions. Then ipylogue is for you. Heavy duty VCS for your
 ipython notebooks.
 
 For another way to share notebooks, check out [bookstore][bookstore]
@@ -20,7 +20,7 @@ Add this to your ipython notebook profile (`ipython_notebook_config.py`):
 
 ```
 # c.NotebookApp.notebook_manager_class = 'IPython.html.services.notebooks.filenbmanager.FileNotebookManager'
-c.NotebookApp.notebook_manager_class = 'pitted.gitmanager.GitNotebookManager'
+c.NotebookApp.notebook_manager_class = 'ipylogue.gitmanager.GitNotebookManager'
 c.GitNotebookManager.commiter_name = u'COMMITTER_NAME'
 c.GitNotebookManager.commiter_email = u'COMMITTER_EMAIL'
 ```
@@ -28,10 +28,10 @@ c.GitNotebookManager.commiter_email = u'COMMITTER_EMAIL'
 It's easy to set up a notebook profile if you don't have one:
 
 ```
-$ ipython profile create pitted
-[ProfileCreate] Generating default config file: u'/home/yourname/.ipython/profile_pitted/ipython_config.py'
-[ProfileCreate] Generating default config file: u'/home/yourname/.ipython/profile_pitted/ipython_notebook_config.py'
-[ProfileCreate] Generating default config file: u'/home/yourname/.ipython/profile_pitted/ipython_nbconvert_config.py'
+$ ipython profile create ipylogue
+[ProfileCreate] Generating default config file: u'/home/yourname/.ipython/profile_ipylogue/ipython_config.py'
+[ProfileCreate] Generating default config file: u'/home/yourname/.ipython/profile_ipylogue/ipython_notebook_config.py'
+[ProfileCreate] Generating default config file: u'/home/yourname/.ipython/profile_ipylogue/ipython_nbconvert_config.py'
 ```
 
 You can also use your default config, located at `~/.ipython/profile_default/ipython_notebook_config.py`
