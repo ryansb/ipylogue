@@ -24,4 +24,4 @@
 Backs the IPython notebook system with git.
 """
 
-from .gitmanager import GitNotebookManager
+from ipylogue.gitmanager import GitNotebookManager
