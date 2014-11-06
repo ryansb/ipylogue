@@ -83,7 +83,8 @@ class GitNotebookManager(FileNotebookManager):
             git.add(self._repo, [str(os.path.splitext(local_path)[0] + '.py')])
 
         self.log.debug("Notebook added %s" % local_path)
-        git.commit(self._repo, "IPython Save",
+        git.commit(self._repo, "IPython notebook save\n\n"
+                   "Automated commit from IPython via pitted",
                    committer=self.committer_fullname)
         return model
 
@@ -113,7 +114,8 @@ class GitNotebookManager(FileNotebookManager):
 
         self.log.debug("Notebook renamed from '%s' to '%s'" % (old_files[0],
                                                                new_files[0]))
-        git.commit(self._repo, "IPython Save - notebook rename",
+        git.commit(self._repo, "IPython notebook rename\n\n"
+                   "Automated commit from IPython via pitted",
                    committer=self.committer_fullname)
         return renamed
 
