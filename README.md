@@ -4,6 +4,13 @@ Like tracking checkpoints in your ipython notebooks? Perhaps you'd like better
 control over their revisions. Then pitted is for you. Heavy duty VCS for your
 ipython notebooks.
 
+For another way to share notebooks, check out [bookstore][bookstore]
+([Rackspace's post about it][blogpost]), which lets you publish notebooks to
+OpenStack Swift (or Rackspace Cloud Files) automatically.
+
+[bookstore]: https://github.com/rgbkrk/bookstore
+[blogpost]: https://developer.rackspace.com/blog/bookstore-for-ipython-notebooks/
+
 
 # Usage
 
@@ -16,8 +23,6 @@ Add this to your ipython notebook profile (`ipython_notebook_config.py`):
 c.NotebookApp.notebook_manager_class = 'pitted.gitmanager.GitNotebookManager'
 c.GitNotebookManager.commiter_name = u'COMMITTER_NAME'
 c.GitNotebookManager.commiter_email = u'COMMITTER_EMAIL'
-c.GitNotebookManager.git_repo = u'/home/yourname/code/fancydatathings'
-c.GitNotebookManager.repo_subdir = u'notebooks' # OPTIONAL: a directory *inside* the repo where you want notebooks to put notebooks
 ```
 
 It's easy to set up a notebook profile if you don't have one:
@@ -31,6 +36,12 @@ $ ipython profile create pitted
 
 You can also use your default config, located at `~/.ipython/profile_default/ipython_notebook_config.py`
 
+# TODO
+
+Add the option to have the root of your notebook folder be a subdir of your repository
+```
+c.GitNotebookManager.repo_subdir = u'notebooks' # OPTIONAL: a directory *inside* the repo where you want notebooks to put notebooks
+```
 
 # Licensing
 
