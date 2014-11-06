@@ -18,7 +18,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-
 import dulwich.porcelain as git
 from dulwich.errors import NotGitRepository
 
@@ -69,10 +68,10 @@ class GitNotebookManager(FileNotebookManager):
             model['name'], model['path'])
         local_path = os_path[len(self.notebook_dir):].strip('/')
 
-        git.add(self._repo, str(local_path))  # path must not be unicode. :(
+        git.add(self._repo, [str(local_path)])  # path must not be unicode. :(
 
         if self.save_script:
-            git.add(self._repo, str(os.path.splitext(local_path)[0] + '.py'))
+            git.add(self._repo, [str(os.path.splitext(local_path)[0] + '.py')])
 
         self.log.debug("Notebook added %s" % local_path)
         git.commit(self._repo, "IPython Save",
