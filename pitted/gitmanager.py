@@ -88,9 +88,25 @@ class GitNotebookManager(FileNotebookManager):
         return super(GitNotebookManager, self).delete_notebook(name, path)
 
     def rename_notebook(self, old_name, old_path, new_name, new_path):
-        #TODO
-        return super(GitNotebookManager, self
-                     ).rename_notebook(old_name, old_path, new_name, new_path)
+        # paths must not be unicode. :(
+        old_files = [str(os.path.join(old_path, old_name))]
+        new_files = [str(os.path.join(new_path, new_name))]
+        if self.save_script:
+            old_files.append(old_files[0].replace('.ipynb', '.py'))
+            new_files.append(new_files[0].replace('.ipynb', '.py'))
+
+        git.rm(self._repo, old_files)
+
+        renamed = super(GitNotebookManager, self
+                        ).rename_notebook(old_name, old_path, new_name, new_path)
+
+        git.add(self._repo, new_files)
+
+        self.log.debug("Notebook renamed from '%s' to '%s'" % (old_files[0],
+                                                               new_files[0]))
+        git.commit(self._repo, "IPython Save - notebook rename",
+                   committer=self.committer_fullname)
+        return renamed
 
     def info_string(self):
         return "Serving notebooks from local git repository: %s" % self.notebook_dir
