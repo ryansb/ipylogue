@@ -1,2 +1,2 @@
-ipython[notebook]>=2.0.0
+ipython[notebook]>=2.2.0
 dulwich>=0.9.3
