@@ -11,21 +11,30 @@ OpenStack Swift (or Rackspace Cloud Files) automatically.
 [bookstore]: https://github.com/rgbkrk/bookstore
 [blogpost]: https://developer.rackspace.com/blog/bookstore-for-ipython-notebooks/
 
+# What does it do?
+
+Interactive computing can yield super cool results. Like discovering a new
+pattern in your data, or stumbling on a better way of doing your work.
+
+Wouldn't it be cool to save your steps so you can see the evolution of your
+notebooks over time? Thought so.
+
+```
+* 48dbea0 - (HEAD, master) IPython notebook rename [Ryan S. Brown]
+* 7dff1f3 - IPython notebook save [Ryan S. Brown]
+* 91b7e32 - IPython notebook save [Ryan S. Brown]
+```
+
+Each save (or rename) event creates a new git commit in the notebook directory.
+By default, that's wherever you ran `ipython notebook`.
 
 # Usage
 
-*Note: Requires IPython 1.0.0+*
+*Note: Requires IPython 2.0.0+*
 
-Add this to your ipython notebook profile (`ipython_notebook_config.py`):
-
-```
-# c.NotebookApp.notebook_manager_class = 'IPython.html.services.notebooks.filenbmanager.FileNotebookManager'
-c.NotebookApp.notebook_manager_class = 'ipylogue.gitmanager.GitNotebookManager'
-c.GitNotebookManager.commiter_name = u'COMMITTER_NAME'
-c.GitNotebookManager.commiter_email = u'COMMITTER_EMAIL'
-```
-
-It's easy to set up a notebook profile if you don't have one:
+First create a profile (or, if you insist, edit the default profile).  You can
+also use your default config, located at
+`~/.ipython/profile_default/ipython_notebook_config.py`
 
 ```
 $ ipython profile create ipylogue
@@ -34,14 +43,43 @@ $ ipython profile create ipylogue
 [ProfileCreate] Generating default config file: u'/home/yourname/.ipython/profile_ipylogue/ipython_nbconvert_config.py'
 ```
 
-You can also use your default config, located at `~/.ipython/profile_default/ipython_notebook_config.py`
+Replace "ipylogue" with another name if you like. It will print the location of
+the profile on your hard drive.
+
+Add these lines to your ipython notebook profile (`ipython_notebook_config.py`):
+
+```
+c.NotebookApp.notebook_manager_class = 'ipylogue.gitmanager.GitNotebookManager'
+c.GitNotebookManager.commiter_name = u'COMMITTER_NAME' # this is optional
+c.GitNotebookManager.commiter_email = u'COMMITTER_EMAIL' # this is optional
+```
+
+Then go to a directory and run `ipython notebook --profile ipylogue`
+
+Each time you save a notebook, ipylogue will commit the changes to git so you
+never lose any history.
+
+# Troubleshooting
+
+If you encounter an error that looks like:
+
+```
+ImportError: IPython.html requires pyzmq >= 2.1.11
+```
+
+Try running `pip install ipython[notebook] --upgrade --force`
 
 # TODO
 
 Add the option to have the root of your notebook folder be a subdir of your repository
+
 ```
 c.GitNotebookManager.repo_subdir = u'notebooks' # OPTIONAL: a directory *inside* the repo where you want notebooks to put notebooks
 ```
+
+Add the option to do all notebook commits on a specific branch to be squashed
+later.
+
 
 # Licensing
 
