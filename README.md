@@ -32,7 +32,9 @@ By default, that's wherever you ran `ipython notebook`.
 
 *Note: Requires IPython 2.0.0+*
 
-First create a profile (or, if you insist, edit the default profile).  You can
+Install ipylogue by running `pip install ipylogue`.
+
+Create a profile (or, if you insist, edit the default profile).  You can
 also use your default config, located at
 `~/.ipython/profile_default/ipython_notebook_config.py`
 
