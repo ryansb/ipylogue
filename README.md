@@ -61,6 +61,15 @@ Then go to a directory and run `ipython notebook --profile ipylogue`
 Each time you save a notebook, ipylogue will commit the changes to git so you
 never lose any history.
 
+# Advanced Usage
+
+Because ipylogue makes a commit for every save/rename while you work on your
+notebook, it may be a good idea to squash some of your commits and add a
+descriptive message. For more information on squashing commits, check out this
+[thigitready.com tutorial][gitready].
+
+[gitready]: http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html)
+
 # Troubleshooting
 
 If you encounter an error that looks like:
