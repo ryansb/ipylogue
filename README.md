@@ -32,6 +32,8 @@ By default, that's wherever you ran `ipython notebook`.
 
 *Note: Requires IPython 2.0.0+*
 
+*Second Note: Doesn't work on IPython 3+ (development version)*
+
 Install ipylogue by running `pip install ipylogue`.
 
 Create a profile (or, if you insist, edit the default profile).  You can
