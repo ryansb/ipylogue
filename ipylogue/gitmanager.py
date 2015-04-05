@@ -22,12 +22,12 @@ import dulwich.porcelain as git
 from dulwich.errors import NotGitRepository
 
 from IPython.utils.traitlets import Unicode
-from IPython.html.services.notebooks.filenbmanager import FileNotebookManager
+from IPython.html.services.contents.filemanager import FileContentsManager
 
 import os
 
 
-class GitNotebookManager(FileNotebookManager):
+class GitNotebookManager(FileContentsManager):
     """Git-backed storage of ipython notebooks.
     """
     committer_name = Unicode('', config=True,
@@ -55,6 +55,7 @@ class GitNotebookManager(FileNotebookManager):
             self.committer_name = self._repo.get_config_stack().get('user', 'name')
 
     def _check_repo(self):
+        self.notebook_dir = super(GitNotebookManager, self)._get_os_path("")
         if self._repo is not None:
             return
         try:
@@ -63,14 +64,15 @@ class GitNotebookManager(FileNotebookManager):
             git.Repo.init(self.notebook_dir)
             self._repo = git.Repo(self.notebook_dir)
 
-    def save_notebook(self, model, name='', path=''):
+    def save(self, model, path=''):
+        self.notebook_dir = super(GitNotebookManager, self)._get_os_path("")
         self._check_repo()
 
-        model = super(GitNotebookManager, self).save_notebook(
-            model, name, path)
+        model = super(GitNotebookManager, self).save(
+            model, path)
 
         os_path = super(GitNotebookManager, self)._get_os_path(
-            model['name'], model['path'])
+            model['path'])
         local_path = os_path[len(self.notebook_dir):].strip('/')
 
         git.add(self._repo, [str(local_path)])  # path must not be unicode. :(
@@ -84,29 +86,27 @@ class GitNotebookManager(FileNotebookManager):
                    committer=self.committer_fullname)
         return model
 
-    def update_notebook(self, model, name, path=''):
+    def update(self, model, path):
         #TODO
-        return super(GitNotebookManager, self
-                     ).update_notebook(model, name, path)
+        return super(GitNotebookManager, self).update(model, path)
 
-    def delete_notebook(self, name, path=''):
+    def delete(self, path):
         #TODO
-        return super(GitNotebookManager, self).delete_notebook(name, path)
+        return super(GitNotebookManager, self).delete(path)
 
-    def rename_notebook(self, old_name, old_path, new_name, new_path):
+    def rename_file(self, old_path, new_path):
         # paths must not be unicode. :(
-        old_files = [str(os.path.join(old_path, old_name))]
-        new_files = [str(os.path.join(new_path, new_name))]
+        old_files = [old_path]
+        new_files = [new_path]
         if self.save_script:
             old_files.append(old_files[0].replace('.ipynb', '.py'))
             new_files.append(new_files[0].replace('.ipynb', '.py'))
 
-        git.rm(self._repo, old_files)
+        git.rm(self._repo, [str(_) for _ in old_files])
 
-        renamed = super(GitNotebookManager, self
-                        ).rename_notebook(old_name, old_path, new_name, new_path)
+        renamed = super(GitNotebookManager, self).rename_file(old_path, new_path)
 
-        git.add(self._repo, new_files)
+        git.add(self._repo, [str(_) for _ in new_files])
 
         self.log.debug("Notebook renamed from '%s' to '%s'" % (old_files[0],
                                                                new_files[0]))
@@ -115,5 +115,5 @@ class GitNotebookManager(FileNotebookManager):
                    committer=self.committer_fullname)
         return renamed
 
-    def info_string(self):
-        return "Serving notebooks from local git repository: %s" % self.notebook_dir
+    #def info_string(self):
+    #    return "Serving notebooks from local git repository: %s" % self.notebook_dir

@@ -30,11 +30,9 @@ By default, that's wherever you ran `ipython notebook`.
 
 # Usage
 
-*Note: Requires IPython 2.0.0+*
+*Note: Requires IPython 3.0.0+*
 
-*Second Note: Doesn't work on IPython 3+ (development version)*
-
-Install ipylogue by running `pip install ipylogue`.
+Install ipylogue by running `python setup.py install`.
 
 Create a profile (or, if you insist, edit the default profile).  You can
 also use your default config, located at
@@ -53,7 +51,7 @@ the profile on your hard drive.
 Add these lines to your ipython notebook profile (`ipython_notebook_config.py`):
 
 ```
-c.NotebookApp.notebook_manager_class = 'ipylogue.gitmanager.GitNotebookManager'
+c.NotebookApp.contents_manager_class = 'ipylogue.gitmanager.GitNotebookManager'
 c.GitNotebookManager.commiter_name = u'COMMITTER_NAME' # this is optional
 c.GitNotebookManager.commiter_email = u'COMMITTER_EMAIL' # this is optional
 ```
