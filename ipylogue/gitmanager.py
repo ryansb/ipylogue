@@ -26,6 +26,7 @@ from IPython.html.services.contents.filemanager import FileContentsManager
 
 import os
 
+#TODO Make checkpoints like here: https://github.com/rgbkrk/bookstore/blob/master/bookstore/swift.py
 
 class GitNotebookManager(FileContentsManager):
     """Git-backed storage of ipython notebooks.
